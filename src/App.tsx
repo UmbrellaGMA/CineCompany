@@ -28,6 +28,7 @@ import {
   Smartphone
 } from 'lucide-react';
 import { SEO } from './components/SEO';
+import { Analytics } from '@vercel/analytics/react';
 
 const CineLogo = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
   if (size === 'lg') {
@@ -701,6 +702,8 @@ export default function App() {
           <p>Oferecemos um sistema de IPTV reseller completo, sendo a solução ideal de IPTV para negócios. Aprenda o passo a passo de como montar negócio IPTV de forma lucrativa e escalável.</p>
         </article>
       </div>
+      
+      <Analytics />
     </div>
   );
 }
