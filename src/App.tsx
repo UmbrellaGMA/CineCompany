@@ -194,6 +194,14 @@ export default function App() {
   const [showMensalistaModal, setShowMensalistaModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,13 +263,13 @@ export default function App() {
       {/* Hero Section - Optimized for Full HD 1920x1080 */}
       <section className="relative h-[100dvh] lg:h-[1080px] lg:max-h-[1080px] flex items-center overflow-hidden">
         {/* Background with movie posters */}
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: 'url(/images/hero-bg.webp)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center right',
-          }}
+        <img 
+          src="/images/hero-bg.webp" 
+          alt="" 
+          className="absolute inset-0 w-full h-full object-cover object-[center_right] z-0 select-none pointer-events-none"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
         />
         {/* Dark overlay gradient */}
         {/* Dark overlay - radial on mobile, linear on desktop */}
@@ -281,9 +289,9 @@ export default function App() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-8 items-center pt-20 pb-12">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: isMobile ? 0 : -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.5 }}
           >
             <motion.p
               initial={{ opacity: 0, y: 10 }}
@@ -347,7 +355,7 @@ export default function App() {
       </section>
 
       {/* Revenda Section */}
-      <section id="como-funciona" className="py-20 md:py-32 px-6 bg-white/2 relative">
+      <section id="como-funciona" className="py-20 md:py-32 px-6 bg-white/2 relative lazy-section">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#00bbff]/5 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="max-w-5xl mx-auto relative z-10">
@@ -394,7 +402,7 @@ export default function App() {
       </section>
 
       {/* Mensalista Section */}
-      <section id="planos-mensalista" className="py-20 md:py-32 px-6">
+      <section id="planos-mensalista" className="py-20 md:py-32 px-6 lazy-section">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#00bbff] font-black uppercase tracking-[0.3em] text-xs mb-4 block">Assinatura Mensal</span>
@@ -500,7 +508,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* Partners Section */}
-      <section id="parceiros" className="py-20 md:py-28 px-6">
+      <section id="parceiros" className="py-20 md:py-28 px-6 lazy-section">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-[#00bbff] font-black uppercase tracking-[0.3em] text-xs mb-4 block">Nossos Parceiros</span>
@@ -523,7 +531,7 @@ export default function App() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 md:py-32 px-6">
+      <section id="faq" className="py-20 md:py-32 px-6 lazy-section">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-[#00bbff] font-black uppercase tracking-[0.3em] text-xs mb-4 block">Dúvidas Frequentes</span>
@@ -557,7 +565,7 @@ export default function App() {
       </section>
 
       {/* Optimized Footer */}
-      <footer className="py-20 px-6 bg-black relative">
+      <footer className="py-20 px-6 bg-black relative lazy-section">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 border-b border-white/5 pb-12">
           <div className="flex flex-col items-start gap-6">
             <CineLogo size="sm" />
