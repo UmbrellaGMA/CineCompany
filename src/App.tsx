@@ -13,7 +13,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 
 // Lazy YouTube Facade - loads thumbnail first, iframe on click
-const LazyYouTube = ({ videoId, title }: { videoId: string; title: string }) => {
+const LazyYouTube = ({ videoId, title, priority = false }: { videoId: string; title: string; priority?: boolean }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 
@@ -44,8 +44,8 @@ const LazyYouTube = ({ videoId, title }: { videoId: string; title: string }) => 
         src={thumbnailUrl}
         alt={title}
         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-        loading="lazy"
-        decoding="async"
+        loading={priority ? "eager" : "lazy"}
+        decoding={priority ? "sync" : "async"}
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-16 h-16 md:w-20 md:h-20 bg-[#00bbff]/90 rounded-full flex items-center justify-center group-hover:bg-[#00bbff] group-hover:scale-110 transition-all shadow-2xl shadow-[#00bbff]/30">
@@ -355,7 +355,7 @@ export default function App() {
       </section>
 
       {/* Revenda Section */}
-      <section id="como-funciona" className="py-20 md:py-32 px-6 bg-white/2 relative lazy-section">
+      <section id="como-funciona" className="py-20 md:py-32 px-6 bg-white/2 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#00bbff]/5 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="max-w-5xl mx-auto relative z-10">
@@ -368,7 +368,7 @@ export default function App() {
           {/* Video Player */}
           <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 mb-16">
             <div className="aspect-video w-full">
-              <LazyYouTube videoId="6PBbELRhg0A" title="Você sabe o que é IPTV?" />
+              <LazyYouTube videoId="6PBbELRhg0A" title="Você sabe o que é IPTV?" priority={true} />
             </div>
           </div>
 
@@ -402,7 +402,7 @@ export default function App() {
       </section>
 
       {/* Mensalista Section */}
-      <section id="planos-mensalista" className="py-20 md:py-32 px-6 lazy-section">
+      <section id="planos-mensalista" className="py-20 md:py-32 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#00bbff] font-black uppercase tracking-[0.3em] text-xs mb-4 block">Assinatura Mensal</span>
