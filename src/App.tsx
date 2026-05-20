@@ -291,21 +291,21 @@ export default function App() {
           <motion.div
             initial={{ opacity: 0, x: isMobile ? 0 : -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.35 }}
           >
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.1 }}
               className="text-[#00bbff] font-black uppercase tracking-[0.15em] text-xs md:text-sm mb-4"
             >
               Seja revendedor do melhor painel de IPTV do Brasil
             </motion.p>
             
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.15 }}
               className="text-xl md:text-3xl lg:text-[2.2rem] font-display font-black leading-[1.15] tracking-tight mb-6 uppercase"
             >
               TENHA ACESSO AO{' '}
@@ -317,9 +317,9 @@ export default function App() {
             </motion.h1>
 
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.25 }}
               className="mt-8"
             >
               <a 
@@ -334,9 +334,9 @@ export default function App() {
 
           {/* Right (desktop) / Top (mobile) - Logo */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, duration: 0.7 }}
+            transition={{ delay: 0.15, duration: 0.35 }}
             className="flex items-center justify-center lg:justify-center"
           >
             <div className="relative">
@@ -347,6 +347,8 @@ export default function App() {
                 src="/images/logo grande vertical.webp" 
                 alt="Cine Company - Revenda Oficial IPTV" 
                 className="w-36 md:w-48 lg:w-[300px] h-auto drop-shadow-2xl"
+                fetchpriority="high"
+                loading="eager"
                 decoding="async"
               />
             </div>
