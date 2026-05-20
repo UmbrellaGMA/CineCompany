@@ -194,13 +194,22 @@ export default function App() {
   const [showMensalistaModal, setShowMensalistaModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [loadMonitoring, setLoadMonitoring] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    
+    // Defer loading of non-critical analytics to free up the main thread (TBT optimization)
+    const timer = setTimeout(() => {
+      setLoadMonitoring(true);
+    }, 2000);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleLeadSubmit = (e: React.FormEvent) => {
@@ -702,8 +711,12 @@ export default function App() {
           <p>Oferecemos um sistema de IPTV reseller completo, sendo a solução ideal de IPTV para negócios. Aprenda o passo a passo de como montar negócio IPTV de forma lucrativa e escalável.</p>
         </article>
       </div>
-      <SpeedInsights />
-      <Analytics />
+      {loadMonitoring && (
+        <>
+          <SpeedInsights />
+          <Analytics />
+        </>
+      )}
     </div>
   );
 }
