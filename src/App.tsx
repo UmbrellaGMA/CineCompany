@@ -269,8 +269,8 @@ export default function App() {
       
       <Navbar />
 
-      {/* Hero Section - Optimized for Full HD 1920x1080 */}
-      <section className="relative h-[100dvh] lg:h-[1080px] lg:max-h-[1080px] flex items-center overflow-hidden">
+      {/* Hero Section - Optimized for Full HD 1920x1080 & Mobile Scroll */}
+      <section className="relative min-h-[100dvh] lg:h-[1080px] lg:max-h-[1080px] flex items-center overflow-hidden py-24 lg:py-0">
         {/* Background with movie posters */}
         <img 
           src="/images/hero-bg.webp" 
@@ -283,7 +283,7 @@ export default function App() {
         {/* Dark overlay gradient */}
         {/* Dark overlay - radial on mobile, linear on desktop */}
         <div className="absolute inset-0 z-[1] lg:hidden" style={{
-          background: 'linear-gradient(to top, #050505 0%, #050505 30%, rgba(5,5,5,0.7) 60%, rgba(5,5,5,0.4) 100%)',
+          background: 'linear-gradient(to top, #050505 0%, #050505 45%, rgba(5,5,5,0.85) 75%, rgba(5,5,5,0.6) 100%)',
         }} />
         <div className="absolute inset-0 z-[1] hidden lg:block" style={{
           background: 'linear-gradient(to right, #050505 0%, #050505 40%, rgba(5,5,5,0.85) 60%, rgba(5,5,5,0.4) 100%)',
@@ -295,7 +295,7 @@ export default function App() {
         {/* Subtle cyan/teal glow */}
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#00bbff]/5 blur-[120px] z-[1] rounded-full pointer-events-none" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-8 items-center pt-20 pb-12">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-8 items-center pt-10 pb-6 lg:pt-20 lg:pb-12">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: isMobile ? 0 : -40 }}
@@ -355,7 +355,7 @@ export default function App() {
               <img 
                 src="/images/logo grande vertical.webp" 
                 alt="Cine Company - Revenda Oficial IPTV" 
-                className="w-36 md:w-48 lg:w-[300px] h-auto drop-shadow-2xl"
+                className="w-28 md:w-48 lg:w-[300px] h-auto drop-shadow-2xl"
                 fetchpriority="high"
                 loading="eager"
                 decoding="async"
