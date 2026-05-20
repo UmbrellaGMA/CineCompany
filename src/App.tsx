@@ -1,50 +1,77 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Tv, 
-  ShieldCheck, 
-  Zap, 
-  Headphones, 
   ChevronDown, 
-  Gamepad2, 
-  Film, 
-  PlayCircle, 
   ArrowRight,
-  TrendingUp,
   CreditCard,
   Menu,
   X,
-  BookOpen,
-  MessageCircle,
-  FileText,
-  DollarSign,
-  Users,
-  Briefcase,
-  Layers,
-  Rocket,
-  CheckCircle2,
-  Mail,
-  Send,
-  Smartphone
+  PlayCircle
 } from 'lucide-react';
 import { SEO } from './components/SEO';
+
+// Lazy YouTube Facade - loads thumbnail first, iframe on click
+const LazyYouTube = ({ videoId, title }: { videoId: string; title: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+
+  const handleClick = useCallback(() => {
+    setIsLoaded(true);
+  }, []);
+
+  if (isLoaded) {
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`}
+        title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="w-full h-full"
+        style={{ border: 'none' }}
+      />
+    );
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      className="w-full h-full relative group cursor-pointer bg-black"
+      aria-label={`Reproduzir vídeo: ${title}`}
+    >
+      <img
+        src={thumbnailUrl}
+        alt={title}
+        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+        loading="lazy"
+        decoding="async"
+      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-16 h-16 md:w-20 md:h-20 bg-[#00bbff]/90 rounded-full flex items-center justify-center group-hover:bg-[#00bbff] group-hover:scale-110 transition-all shadow-2xl shadow-[#00bbff]/30">
+          <PlayCircle className="w-8 h-8 md:w-10 md:h-10 text-white" />
+        </div>
+      </div>
+    </button>
+  );
+};
 
 const CineLogo = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
   if (size === 'lg') {
     return (
       <img 
-        src="/images/logo grande vertical.png" 
+        src="/images/logo grande vertical.webp" 
         alt="Cine Company - Revenda Oficial IPTV" 
         className="w-56 md:w-72 lg:w-[300px] h-auto drop-shadow-2xl"
+        decoding="async"
       />
     );
   }
   
   return (
     <img 
-      src="/images/logo horizontal.png" 
+      src="/images/logo horizontal.webp" 
       alt="Cine Company" 
       className={size === 'sm' ? 'h-10 w-auto' : 'h-12 w-auto'}
+      decoding="async"
     />
   );
 };
@@ -159,31 +186,6 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
   );
 };
 
-const BlogArticle = ({ title, excerpt, date, author }: any) => (
-  <motion.article 
-    whileHover={{ y: -5 }}
-    className="glass rounded-3xl overflow-hidden group cursor-pointer"
-  >
-    <div className="aspect-video bg-white/5 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <BookOpen className="w-12 h-12 text-brand-primary opacity-20 group-hover:scale-110 transition-transform" />
-      </div>
-      <div className="absolute bottom-4 left-6 z-20">
-        <span className="px-3 py-1 bg-brand-primary text-white text-[10px] font-black rounded uppercase tracking-widest">{date}</span>
-      </div>
-    </div>
-    <div className="p-8">
-      <h3 className="text-xl font-black mb-3 group-hover:text-brand-primary transition-colors leading-tight">{title}</h3>
-      <p className="text-white/40 text-sm leading-relaxed mb-6 line-clamp-2">{excerpt}</p>
-      <div className="flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-widest font-bold opacity-40">Por {author}</span>
-        <span className="text-brand-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">Ler mais <ArrowRight className="w-4 h-4" /></span>
-      </div>
-    </div>
-  </motion.article>
-);
-
 export default function App() {
   const [leadEmail, setLeadEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -254,7 +256,7 @@ export default function App() {
         <div 
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: 'url(/images/hero-bg.png)',
+            backgroundImage: 'url(/images/hero-bg.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center right',
           }}
@@ -332,9 +334,10 @@ export default function App() {
               <div className="absolute inset-0 bg-[#00bbff]/10 blur-[80px] rounded-full scale-75" />
               {/* Small logo on mobile, large on desktop */}
               <img 
-                src="/images/logo grande vertical.png" 
+                src="/images/logo grande vertical.webp" 
                 alt="Cine Company - Revenda Oficial IPTV" 
                 className="w-36 md:w-48 lg:w-[300px] h-auto drop-shadow-2xl"
+                decoding="async"
               />
             </div>
           </motion.div>
@@ -355,14 +358,7 @@ export default function App() {
           {/* Video Player */}
           <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 mb-16">
             <div className="aspect-video w-full">
-              <iframe
-                src="https://www.youtube.com/embed/6PBbELRhg0A?rel=0"
-                title="Você sabe o que é IPTV?"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-                style={{ border: 'none' }}
-              />
+              <LazyYouTube videoId="6PBbELRhg0A" title="Você sabe o que é IPTV?" />
             </div>
           </div>
 
@@ -407,14 +403,7 @@ export default function App() {
           {/* Video Player */}
           <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 mb-16">
             <div className="aspect-video w-full">
-              <iframe
-                src="https://www.youtube.com/embed/ddC1gLkAwwI?rel=0"
-                title="Como virar um mensalista"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-                style={{ border: 'none' }}
-              />
+              <LazyYouTube videoId="ddC1gLkAwwI" title="Como virar um mensalista" />
             </div>
           </div>
 
@@ -519,13 +508,13 @@ export default function App() {
 
           <div className="flex flex-wrap items-center justify-center gap-10 md:gap-20">
             <motion.div whileHover={{ scale: 1.08 }} className="transition-all">
-              <img src="/images/lazer png 1.png" alt="Lazer Play" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" />
+              <img src="/images/lazer png 1.webp" alt="Lazer Play" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
             </motion.div>
             <motion.div whileHover={{ scale: 1.08 }} className="transition-all">
-              <img src="/images/assist+.png" alt="Assist+" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" />
+              <img src="/images/assist+.webp" alt="Assist+" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
             </motion.div>
             <motion.div whileHover={{ scale: 1.08 }} className="transition-all">
-              <img src="/images/xcloud.png" alt="XCloud" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" />
+              <img src="/images/xcloud.webp" alt="XCloud" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
             </motion.div>
           </div>
         </div>
