@@ -270,7 +270,7 @@ export default function App() {
       <Navbar />
 
       {/* Hero Section - Optimized for Full HD 1920x1080 & Mobile Scroll */}
-      <section className="relative min-h-[100dvh] lg:h-[1080px] lg:max-h-[1080px] flex items-center overflow-hidden py-24 lg:py-0">
+      <section className="relative min-h-0 lg:h-[1080px] lg:max-h-[1080px] flex items-center overflow-hidden py-16 lg:py-0">
         {/* Background with movie posters */}
         <img 
           src="/images/hero-bg.webp" 
@@ -283,7 +283,7 @@ export default function App() {
         {/* Dark overlay gradient */}
         {/* Dark overlay - radial on mobile, linear on desktop */}
         <div className="absolute inset-0 z-[1] lg:hidden" style={{
-          background: 'linear-gradient(to top, #050505 0%, #050505 45%, rgba(5,5,5,0.85) 75%, rgba(5,5,5,0.6) 100%)',
+          background: 'linear-gradient(to top, #050505 0%, rgba(5,5,5,0.95) 60%, rgba(5,5,5,0.6) 100%)',
         }} />
         <div className="absolute inset-0 z-[1] hidden lg:block" style={{
           background: 'linear-gradient(to right, #050505 0%, #050505 40%, rgba(5,5,5,0.85) 60%, rgba(5,5,5,0.4) 100%)',
@@ -295,7 +295,7 @@ export default function App() {
         {/* Subtle cyan/teal glow */}
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#00bbff]/5 blur-[120px] z-[1] rounded-full pointer-events-none" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-8 items-center pt-10 pb-6 lg:pt-20 lg:pb-12">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-8 items-center pt-16 pb-4 lg:pt-20 lg:pb-12">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: isMobile ? 0 : -40 }}
@@ -366,7 +366,7 @@ export default function App() {
       </section>
 
       {/* Revenda Section */}
-      <section id="como-funciona" className="py-20 md:py-32 px-6 bg-white/2 relative">
+      <section id="como-funciona" className="pt-10 pb-20 md:py-32 px-6 bg-white/2 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#00bbff]/5 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="max-w-5xl mx-auto relative z-10">
