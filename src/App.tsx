@@ -9,6 +9,8 @@ import {
   PlayCircle
 } from 'lucide-react';
 import { SEO } from './components/SEO';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 // Lazy YouTube Facade - loads thumbnail first, iframe on click
 const LazyYouTube = ({ videoId, title }: { videoId: string; title: string }) => {
@@ -690,6 +692,8 @@ export default function App() {
           <p>Oferecemos um sistema de IPTV reseller completo, sendo a solução ideal de IPTV para negócios. Aprenda o passo a passo de como montar negócio IPTV de forma lucrativa e escalável.</p>
         </article>
       </div>
+      <SpeedInsights />
+      <Analytics />
     </div>
   );
 }
