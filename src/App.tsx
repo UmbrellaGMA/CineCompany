@@ -475,7 +475,7 @@ export default function App() {
       )}
 
       {/* Partners Section */}
-      <section id="parceiros" className="py-20 md:py-28 px-6 lazy-section">
+      <section id="parceiros" className="py-20 md:py-28 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-[#00bbff] font-black uppercase tracking-[0.3em] text-xs mb-4 block">Nossos Parceiros</span>
@@ -498,7 +498,7 @@ export default function App() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 md:py-32 px-6 lazy-section">
+      <section id="faq" className="py-20 md:py-32 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-[#00bbff] font-black uppercase tracking-[0.3em] text-xs mb-4 block">Dúvidas Frequentes</span>
@@ -532,7 +532,7 @@ export default function App() {
       </section>
 
       {/* Optimized Footer */}
-      <footer className="py-20 px-6 bg-black relative lazy-section">
+      <footer className="py-20 px-6 bg-black relative">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 border-b border-white/5 pb-12">
           <div className="flex flex-col items-start gap-6">
             <CineLogo size="sm" />
