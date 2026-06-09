@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronDown, 
   ArrowRight,
@@ -127,42 +126,34 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 glass py-6 px-6 flex flex-col gap-4 lg:hidden border-b border-white/10"
-          >
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href} 
-                className="text-lg font-bold uppercase tracking-tight"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isMobileMenuOpen && (
+        <div className="absolute top-full left-0 right-0 glass py-6 px-6 flex flex-col gap-4 lg:hidden border-b border-white/10 animate-fade-in">
+          {navLinks.map((link) => (
+            <a 
+              key={link.name} 
+              href={link.href} 
+              className="text-lg font-bold uppercase tracking-tight"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };
 
 const PricingCard = ({ credits, price, href = "https://painelcinecompany.online/#/rs/4vLbAXg1gG/ayb1BQxWPR" }: { credits: string, price: string, href?: string }) => (
-  <motion.a 
+  <a 
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    whileHover={{ scale: 1.05, borderColor: 'rgba(0,187,255,0.6)' }}
-    className="block relative p-5 md:p-6 rounded-2xl glass border border-[#00bbff]/20 hover:shadow-[0_0_30px_-8px_rgba(0,187,255,0.25)] transition-all cursor-pointer text-center"
+    className="block relative p-5 md:p-6 rounded-2xl glass border border-[#00bbff]/20 hover:border-[#00bbff]/60 hover:shadow-[0_0_30px_-8px_rgba(0,187,255,0.25)] transition-all duration-300 hover:scale-105 cursor-pointer text-center"
   >
     <p className="text-[#00bbff] font-black text-xs md:text-sm uppercase tracking-widest mb-2">{credits} CRÉDITOS</p>
     <p className="text-white font-black text-2xl md:text-3xl tracking-tight">R${price}</p>
-  </motion.a>
+  </a>
 );
 
 const FAQItem = ({ question, answer }: { question: string, answer: string }) => {
@@ -176,19 +167,11 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
         <span className="font-bold">{question}</span>
         <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-          >
-            <div className="p-6 pt-0 text-white/60 text-sm leading-relaxed border-t border-white/5">
-              {answer}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className={`transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="p-6 pt-0 text-white/60 text-sm leading-relaxed border-t border-white/5">
+          {answer}
+        </div>
+      </div>
     </div>
   );
 };
@@ -301,11 +284,7 @@ export default function App() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-8 items-center pt-16 pb-4 lg:pt-20 lg:pb-12">
           {/* Left Content */}
-          <motion.div
-            initial={isMobile ? false : { opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div>
             <p className="text-[#00bbff] font-black uppercase tracking-[0.15em] text-xs md:text-sm mb-4">
               Seja revendedor do melhor painel de IPTV do Brasil
             </p>
@@ -328,7 +307,7 @@ export default function App() {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right (desktop) / Top (mobile) - Logo */}
           <div className="flex items-center justify-center lg:justify-center">
@@ -443,25 +422,17 @@ export default function App() {
       </section>
 
       {/* Mensalista Modal */}
-      <AnimatePresence>
-        {showMensalistaModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center px-4"
-            onClick={() => setShowMensalistaModal(false)}
-          >
+      {showMensalistaModal && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center px-4 animate-fade-in"
+          onClick={() => setShowMensalistaModal(false)}
+        >
             {/* Backdrop */}
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             
             {/* Modal */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-10 overflow-hidden"
+            <div
+              className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-10 overflow-hidden shadow-2xl scale-100 transition-all duration-300"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Glow */}
@@ -499,10 +470,9 @@ export default function App() {
 
                 <p className="text-white/20 text-[10px] uppercase tracking-widest mt-6 font-bold">Pagamento seguro • Ativação imediata</p>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
 
       {/* Partners Section */}
       <section id="parceiros" className="py-20 md:py-28 px-6 lazy-section">
@@ -609,77 +579,61 @@ export default function App() {
       </footer>
 
       {/* Terms Modal */}
-      <AnimatePresence>
-        {showTermsModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center px-4"
-            onClick={() => setShowTermsModal(false)}
+      {showTermsModal && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center px-4 animate-fade-in"
+          onClick={() => setShowTermsModal(false)}
+        >
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl scale-100 transition-all duration-300"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-10"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              onClick={() => setShowTermsModal(false)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
             >
-              <button
-                onClick={() => setShowTermsModal(false)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <h2 className="text-2xl font-black text-[#00bbff] uppercase tracking-tighter mb-6">Termos de Revendedor</h2>
-              <div className="space-y-4 text-white/60 text-sm leading-relaxed">
-                <p><strong>1. Aceitação dos Termos:</strong> Ao adquirir créditos na Cine Company, você concorda com nossos termos de prestação de serviço e licenciamento.</p>
-                <p><strong>2. Sistema Pré-pago:</strong> O serviço funciona exclusivamente no modelo pré-pago. Os créditos adquiridos não expiram e não são passíveis de reembolso após a utilização das ativações.</p>
-                <p><strong>3. Responsabilidade do Revendedor:</strong> O revendedor é inteiramente responsável pelo suporte em primeiro nível aos seus clientes, assim como pelas transações financeiras entre o revendedor e seu cliente final.</p>
-                <p><strong>4. Estabilidade do Serviço:</strong> A Cine Company se compromete a fornecer a melhor infraestrutura do mercado, no entanto, instabilidades ocasionais na rede do cliente final ou rotas de internet locais não são de nossa responsabilidade.</p>
-                <p><strong>5. Suspensão de Conta:</strong> O uso de práticas abusivas, revenda de painéis sem autorização expressa, ou atividades que prejudiquem a marca Cine Company poderão resultar no banimento da conta do revendedor e perda de créditos.</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <X className="w-5 h-5" />
+            </button>
+            <h2 className="text-2xl font-black text-[#00bbff] uppercase tracking-tighter mb-6">Termos de Revendedor</h2>
+            <div className="space-y-4 text-white/60 text-sm leading-relaxed">
+              <p><strong>1. Aceitação dos Termos:</strong> Ao adquirir créditos na Cine Company, você concorda com nossos termos de prestação de serviço e licenciamento.</p>
+              <p><strong>2. Sistema Pré-pago:</strong> O serviço funciona exclusivamente no modelo pré-pago. Os créditos adquiridos não expiram e não são passíveis de reembolso após a utilização das ativações.</p>
+              <p><strong>3. Responsabilidade do Revendedor:</strong> O revendedor é inteiramente responsável pelo suporte em primeiro nível aos seus clientes, assim como pelas transações financeiras entre o revendedor e seu cliente final.</p>
+              <p><strong>4. Estabilidade do Serviço:</strong> A Cine Company se compromete a fornecer a melhor infraestrutura do mercado, no entanto, instabilidades ocasionais na rede do cliente final ou rotas de internet locais não são de nossa responsabilidade.</p>
+              <p><strong>5. Suspensão de Conta:</strong> O uso de práticas abusivas, revenda de painéis sem autorização expressa, ou atividades que prejudiquem a marca Cine Company poderão resultar no banimento da conta do revendedor e perda de créditos.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Privacy Modal */}
-      <AnimatePresence>
-        {showPrivacyModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center px-4"
-            onClick={() => setShowPrivacyModal(false)}
+      {showPrivacyModal && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center px-4 animate-fade-in"
+          onClick={() => setShowPrivacyModal(false)}
+        >
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl scale-100 transition-all duration-300"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-10"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              onClick={() => setShowPrivacyModal(false)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
             >
-              <button
-                onClick={() => setShowPrivacyModal(false)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <h2 className="text-2xl font-black text-[#00bbff] uppercase tracking-tighter mb-6">Políticas de Privacidade</h2>
-              <div className="space-y-4 text-white/60 text-sm leading-relaxed">
-                <p><strong>1. Coleta de Dados:</strong> Coletamos apenas informações estritamente necessárias para criação do cadastro e gestão do painel financeiro e de acessos.</p>
-                <p><strong>2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para suporte técnico, comunicados de sistema e faturamento. Nós não vendemos ou compartilhamos seus dados com terceiros ou empresas de marketing externo.</p>
-                <p><strong>3. Segurança:</strong> Nossa infraestrutura utiliza criptografia avançada e as mais recentes tecnologias de proteção de banco de dados para garantir o sigilo completo dos seus dados e dos seus clientes.</p>
-                <p><strong>4. Exclusão de Dados:</strong> O revendedor tem o direito de solicitar a exclusão total de sua conta e informações a qualquer momento através do nosso suporte oficial, encerrando permanentemente sua operação.</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <X className="w-5 h-5" />
+            </button>
+            <h2 className="text-2xl font-black text-[#00bbff] uppercase tracking-tighter mb-6">Políticas de Privacidade</h2>
+            <div className="space-y-4 text-white/60 text-sm leading-relaxed">
+              <p><strong>1. Coleta de Dados:</strong> Coletamos apenas informações estritamente necessárias para criação do cadastro e gestão do painel financeiro e de acessos.</p>
+              <p><strong>2. Uso das Informações:</strong> Seus dados são utilizados exclusivamente para suporte técnico, comunicados de sistema e faturamento. Nós não vendemos ou compartilhamos seus dados com terceiros ou empresas de marketing externo.</p>
+              <p><strong>3. Segurança:</strong> Nossa infraestrutura utiliza criptografia avançada e as mais recentes tecnologias de proteção de banco de dados para garantir o sigilo completo dos seus dados e dos seus clientes.</p>
+              <p><strong>4. Exclusão de Dados:</strong> O revendedor tem o direito de solicitar a exclusão total de sua conta e informações a qualquer momento através do nosso suporte oficial, encerrando permanentemente sua operation.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* SEO Optimization & Breadcrumbs (Hidden visually, present for crawlers) */}
       <div className="hidden" aria-hidden="true">
