@@ -1,0 +1,15 @@
+# =============================================
+# Robots.txt - Cine Company Revenda IPTV
+# https://www.revendacinecompany.com
+# =============================================
+
+User-agent: *
+Allow: /
+Disallow: /assets/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://www.revendacinecompany.com/sitemap.xml
+
+# Crawl-delay (recomendado para não sobrecarregar)
+Crawl-delay: 1
