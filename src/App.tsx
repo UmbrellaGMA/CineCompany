@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronDown, 
@@ -8,9 +8,10 @@ import {
   X,
   PlayCircle
 } from 'lucide-react';
-import { SEO } from './components/SEO';
-import { SpeedInsights } from '@vercel/speed-insights/react';
-import { Analytics } from '@vercel/analytics/react';
+
+// Lazy load non-critical analytics
+const SpeedInsights = lazy(() => import('@vercel/speed-insights/react').then(m => ({ default: m.SpeedInsights })));
+const Analytics = lazy(() => import('@vercel/analytics/react').then(m => ({ default: m.Analytics })));
 
 // Lazy YouTube Facade - loads thumbnail first, iframe on click
 const LazyYouTube = ({ videoId, title, priority = false }: { videoId: string; title: string; priority?: boolean }) => {
@@ -62,6 +63,8 @@ const CineLogo = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
       <img 
         src="/images/logo grande vertical.webp" 
         alt="Cine Company - Revenda Oficial IPTV" 
+        width={300}
+        height={400}
         className="w-56 md:w-72 lg:w-[300px] h-auto drop-shadow-2xl"
         decoding="async"
       />
@@ -72,6 +75,8 @@ const CineLogo = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
     <img 
       src="/images/logo horizontal.webp" 
       alt="Cine Company" 
+      width={200}
+      height={48}
       className={size === 'sm' ? 'h-10 w-auto' : 'h-12 w-auto'}
       decoding="async"
     />
@@ -260,27 +265,26 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-mesh selection:bg-brand-primary selection:text-white">
-      <SEO 
-        title="Como Vender IPTV: Guia Completo para Revendedores 2026 | Cine Company"
-        description="Aprenda como começar sua revenda de IPTV oficial. Painel profissional, suporte 24h e a melhor lista do mercado. Comece a ganhar dinheiro hoje!"
-        keywords="como vender iptv, como revender iptv, revenda iptv, painel iptv, ganhar dinheiro com iptv, melhor painel para iptv, iptv reseller brasil"
-        schema={[schema, faqSchema]}
-      />
       
       <Navbar />
 
       {/* Hero Section - Optimized for Full HD 1920x1080 & Mobile Scroll */}
       <section className="relative min-h-0 lg:h-[1080px] lg:max-h-[1080px] flex items-center overflow-hidden py-16 lg:py-0">
-        {/* Background with movie posters */}
-        <img 
-          src="/images/hero-bg.webp" 
-          alt="" 
-          className="absolute inset-0 w-full h-full object-cover object-[center_right] z-0 select-none pointer-events-none"
-          fetchpriority="high"
-          loading="eager"
-          decoding="async"
-        />
-        {/* Dark overlay gradient */}
+        {/* Background - mobile uses smaller optimized image (29KB vs 63KB) */}
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/images/hero-bg-mobile.webp" type="image/webp" />
+          <source media="(min-width: 769px)" srcSet="/images/hero-bg.webp" type="image/webp" />
+          <img 
+            src="/images/hero-bg.webp" 
+            alt="" 
+            width={1920}
+            height={1080}
+            className="absolute inset-0 w-full h-full object-cover object-[center_right] z-0 select-none pointer-events-none"
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
+          />
+        </picture>
         {/* Dark overlay - radial on mobile, linear on desktop */}
         <div className="absolute inset-0 z-[1] lg:hidden" style={{
           background: 'linear-gradient(to top, #050505 0%, rgba(5,5,5,0.95) 60%, rgba(5,5,5,0.6) 100%)',
@@ -292,45 +296,30 @@ export default function App() {
         <div className="absolute top-0 left-0 right-0 h-32 z-[2]" style={{
           background: 'linear-gradient(to bottom, #050505 0%, transparent 100%)',
         }} />
-        {/* Subtle cyan/teal glow */}
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#00bbff]/5 blur-[120px] z-[1] rounded-full pointer-events-none" />
+        {/* Subtle cyan/teal glow - reduced on mobile */}
+        <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-[#00bbff]/5 blur-[80px] md:blur-[120px] z-[1] rounded-full pointer-events-none" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-8 items-center pt-16 pb-4 lg:pt-20 lg:pb-12">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, x: isMobile ? 0 : -40 }}
+            initial={isMobile ? false : { opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.35 }}
+            transition={{ duration: 0.3 }}
           >
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-[#00bbff] font-black uppercase tracking-[0.15em] text-xs md:text-sm mb-4"
-            >
+            <p className="text-[#00bbff] font-black uppercase tracking-[0.15em] text-xs md:text-sm mb-4">
               Seja revendedor do melhor painel de IPTV do Brasil
-            </motion.p>
+            </p>
             
-            <motion.h1 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="text-xl md:text-3xl lg:text-[2.2rem] font-display font-black leading-[1.15] tracking-tight mb-6 uppercase"
-            >
+            <h1 className="text-xl md:text-3xl lg:text-[2.2rem] font-display font-black leading-[1.15] tracking-tight mb-6 uppercase">
               TENHA ACESSO AO{' '}
               <span className="text-[#00bbff]">PAINEL DE REVENDA, ESTABILIDADE MÁXIMA, SUPORTE RÁPIDO</span>
               {' '}E MAIS DE{' '}
               <span className="text-[#00bbff]">85 MIL CONTEÚDOS PARA VENDER</span>
               {' '}— CANAIS, FILMES, SÉRIES, ESPORTES,{' '}
               <span className="text-[#00bbff]">TUDO EM HD, FULL HD E 4K.</span>
-            </motion.h1>
+            </h1>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
-              className="mt-8"
-            >
+            <div className="mt-8">
               <a 
                 href="https://painelcinecompany.online/#/rs/4vLbAXg1gG/ayb1BQxWPR"
                 className="group inline-flex items-center gap-3 px-7 py-3.5 md:px-9 md:py-4 bg-[#00bbff] text-white rounded-full font-black uppercase tracking-tight text-sm hover:bg-[#00d4ff] transition-all transform hover:scale-105 shadow-xl shadow-[#00bbff]/25 border border-[#00d4ff]/30"
@@ -338,30 +327,27 @@ export default function App() {
                 QUERO SER UM REVENDEDOR OFICIAL
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* Right (desktop) / Top (mobile) - Logo */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.15, duration: 0.35 }}
-            className="flex items-center justify-center lg:justify-center"
-          >
+          <div className="flex items-center justify-center lg:justify-center">
             <div className="relative">
               {/* Glow behind logo */}
-              <div className="absolute inset-0 bg-[#00bbff]/10 blur-[80px] rounded-full scale-75" />
+              <div className="absolute inset-0 bg-[#00bbff]/10 blur-[60px] md:blur-[80px] rounded-full scale-75" />
               {/* Small logo on mobile, large on desktop */}
               <img 
                 src="/images/logo grande vertical.webp" 
                 alt="Cine Company - Revenda Oficial IPTV" 
+                width={300}
+                height={400}
                 className="w-28 md:w-48 lg:w-[300px] h-auto drop-shadow-2xl"
                 fetchpriority="high"
                 loading="eager"
                 decoding="async"
               />
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -528,15 +514,15 @@ export default function App() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-10 md:gap-20">
-            <motion.div whileHover={{ scale: 1.08 }} className="transition-all">
-              <img src="/images/lazer png 1.webp" alt="Lazer Play" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.08 }} className="transition-all">
-              <img src="/images/assist+.webp" alt="Assist+" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.08 }} className="transition-all">
-              <img src="/images/xcloud.webp" alt="XCloud" className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
-            </motion.div>
+            <div className="hover:scale-108 transition-transform">
+              <img src="/images/lazer png 1.webp" alt="Lazer Play" width={200} height={112} className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
+            </div>
+            <div className="hover:scale-108 transition-transform">
+              <img src="/images/assist+.webp" alt="Assist+" width={200} height={112} className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
+            </div>
+            <div className="hover:scale-108 transition-transform">
+              <img src="/images/xcloud.webp" alt="XCloud" width={200} height={112} className="h-20 md:h-28 object-contain opacity-80 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
+            </div>
           </div>
         </div>
       </section>
@@ -712,10 +698,10 @@ export default function App() {
         </article>
       </div>
       {loadMonitoring && (
-        <>
+        <Suspense fallback={null}>
           <SpeedInsights />
           <Analytics />
-        </>
+        </Suspense>
       )}
     </div>
   );

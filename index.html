@@ -118,7 +118,9 @@
     <!-- ============================== -->
     <!-- PERFORMANCE - PRELOAD IMAGENS   -->
     <!-- ============================== -->
-    <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" />
+    <!-- Mobile gets smaller hero (29KB vs 63KB) -->
+    <link rel="preload" as="image" href="/images/hero-bg-mobile.webp" type="image/webp" media="(max-width: 768px)" />
+    <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" media="(min-width: 769px)" />
     <link rel="preload" as="image" href="/images/logo grande vertical.webp" type="image/webp" />
   </head>
   <body>
